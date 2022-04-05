@@ -42,8 +42,65 @@ app.get('/api/v1/users', (req, res, next) => {
     res.send(JSON.stringify(users)) //azert kell h tudja ovlasni stringkent a bongeszo */
 });
 
+//ezzel lehet kiszedni user ID ra airni es ugy lhet query 
+app.get('/api/v1/users-query', (req, res, next) => {
+    console.dir(req.query)
+    console.log(req.query.apiKey)
+    if (req.query.apiKey === "apple") {
+        res.sendFile(path.join(`${__dirname}/../frontend/users.json`));
+        
+    }else {
+        res.send("Unauthorized request")
+    }
+
+
+    
+/*     const users = [
+        {
+            name: 'John',
+            surname: 'Doe',
+            status: 'active'
+        },
+        {
+            name: 'David',
+            surname: 'Nyikes',
+            status: 'passive'
+        }
+    ]
+    res.send(JSON.stringify(users)) //azert kell h tudja ovlasni stringkent a bongeszo */
+});
+/* // ezt alakitottuk at lentebb
+app.get('/api/v1/users-params/:key', (req, res, next) => {  // ezen a kulcson lehet elerni 
+    console.dir(req.params)
+    console.log(req.params.key)
+
+    if (req.params.key === "apple") {
+        res.send("Azt mondtad alma")
+    } else {
+        res.send("Ez nem alma")
+    }
+    
+
+});
+ */
 const userFile = path.join(`${__dirname}/../frontend/users.json`) // ezt kene berakni lentre
 
+app.get('/api/v1/users-params/:key', (req, res, next) => {  // arra kell figyelni h mi a param mi a query
+    console.dir(req.params)
+    console.log(req.params.key)
+    fs.readFile(userFile, (error, data) => {
+        const users = JSON.parse(data) 
+        if (req.params.key === "active") {
+            res.send(users.filter(user => user.status === "active"))
+        } else if (req.params.key === "passive") {
+            res.send(users.filter(user => user.status === "passive"))
+        } else {
+            res.send("Error reading file")
+        }
+    })
+});
+
+/* //eredeti, ezy irtuk at felette egybe berakni a kettot
 app.get('/api/v1/users/active', (req, res, next) => {
     fs.readFile(userFile, (error, data) => {
         if (error) {
@@ -67,9 +124,9 @@ app.get('/api/v1/users/passive', (req, res, next) => {
         }
     })
 });
+ */
 
-
-app.use('/public', express.static(`${__dirname}/../frontend/public`)); //eso h a frontenden hogy erem el, a masodik pedig az absolut eleresi ut
+app.use('/public', express.static(`${__dirname}/../frontend/public`)); //elso h a frontenden hogy erem el, a masodik pedig az absolut eleresi ut
 
 app.listen(port, () => {
     console.log(`http://127.0.0.1:${port}`);

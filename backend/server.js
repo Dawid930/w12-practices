@@ -45,7 +45,7 @@ app.get('/api/v1/users', (req, res, next) => {
 const userFile = path.join(`${__dirname}/../frontend/users.json`) // ezt kene berakni lentre
 
 app.get('/api/v1/users/active', (req, res, next) => {
-    fs.readFile('../frontend/users.json', (error, data) => {
+    fs.readFile(userFile, (error, data) => {
         if (error) {
             res.send("Error reading file")
         } else {
@@ -57,7 +57,7 @@ app.get('/api/v1/users/active', (req, res, next) => {
 });
 
 app.get('/api/v1/users/passive', (req, res, next) => {
-    fs.readFile('../frontend/users.json', (error, data) => {
+    fs.readFile(userFile, (error, data) => {
         if (error) {
             res.send("Error reading file")
         } else {

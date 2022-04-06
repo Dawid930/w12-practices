@@ -1,3 +1,4 @@
+const { deepStrictEqual } = require('assert');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -5,8 +6,16 @@ const path = require('path');
 const app = express();
 const port = 9000;
 
+app.use(express.json()); // megfelelo esetekben jsonna alakitjaa request odyjat eshozzacsatolja a reqesthez
+
+const fFolder = `${__dirname}/../frontend`
+
 app.get('/', (req, res, next) => {
     res.sendFile(path.join(`${__dirname}/../frontend/index.html`)); //itt szolgaljuk ki az index.html
+});
+
+app.get('/admin/order-view', (req, res, next) => {
+    res.sendFile(path.join(`${__dirname}/../frontend/index.html`));
 });
 
 
@@ -127,6 +136,30 @@ app.get('/api/v1/users/passive', (req, res, next) => {
  */
 
 app.use('/public', express.static(`${__dirname}/../frontend/public`)); //elso h a frontenden hogy erem el, a masodik pedig az absolut eleresi ut
+
+
+app.post("/users/new", (req, res) => {
+    fs.readFile(`${fFolder}/users.json`, (error, data) => {
+        if (error) {
+            console.log(error);
+            res.send("Error reeading users file")
+            
+        } else {
+            const users = JSON.parse(data);
+            console.log(req.body);
+
+            users.push(req.body)
+
+            fs.writeFile(`${fFolder}/users.json`, JSON.stringify(users), error => {  //stringge kell alakitani h tudjunk bele irni
+                if (error) {
+                    console.log(error);
+                    res.send("Error writing users file")
+                }
+            })
+            res.send(req.body)
+        }
+    })
+})
 
 app.listen(port, () => {
     console.log(`http://127.0.0.1:${port}`);

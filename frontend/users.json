@@ -1,12 +1,1 @@
-[
-        {
-            "name": "John",
-            "surname": "Doe",
-            "status": "active"
-        },
-        {
-            "name": "David",
-            "surname": "Nyikes",
-            "status": "passive"
-        }
-    ]
+[{"firstName":"DAvid","surname":"Nyikes"}]

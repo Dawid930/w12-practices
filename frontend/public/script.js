@@ -57,10 +57,10 @@ const loadEvent = async () => {
             headers: {
                 'Content-Type': 'application/json'  // akkor kell ha nem form/formdata-ban dolgozunk, itt adjuk meg h milyen contentet kuldunk
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify(userData) // JSON formatta alakitja a bekuldott erteketet
         })
-        .then(async data => {
-            const user = await data.json();
+        .then(async data => { // resolution itt jon vissza mint data, z mentjuk az user valtozoba. 
+            const user = await data.json();  //A .json() a JSON filebol Javascript objectet csinal 
             rootElement.insertAdjacentHTML("beforeend", userComponent(user))
         })
     })

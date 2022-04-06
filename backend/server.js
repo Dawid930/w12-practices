@@ -1,4 +1,3 @@
-const { deepStrictEqual } = require('assert');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -6,7 +5,7 @@ const path = require('path');
 const app = express();
 const port = 9000;
 
-app.use(express.json()); // megfelelo esetekben jsonna alakitjaa request odyjat eshozzacsatolja a reqesthez
+app.use(express.json()); // megfelelo esetekben jsonna alakitjaa request bodyjat es hozzacsatolja a reqesthez FONTOS!!!!!
 
 const fFolder = `${__dirname}/../frontend`
 
@@ -58,7 +57,7 @@ app.get('/api/v1/users-query', (req, res, next) => {
     if (req.query.apiKey === "apple") {
         res.sendFile(path.join(`${__dirname}/../frontend/users.json`));
         
-    }else {
+    } else {
         res.send("Unauthorized request")
     }
 
@@ -109,7 +108,7 @@ app.get('/api/v1/users-params/:key', (req, res, next) => {  // arra kell figyeln
     })
 });
 
-/* //eredeti, ezy irtuk at felette egybe berakni a kettot
+/* //eredeti, ezt irtuk at felette egybe berakni a kettot
 app.get('/api/v1/users/active', (req, res, next) => {
     fs.readFile(userFile, (error, data) => {
         if (error) {
@@ -145,10 +144,10 @@ app.post("/users/new", (req, res) => {
             res.send("Error reeading users file")
             
         } else {
-            const users = JSON.parse(data);
+            const users = JSON.parse(data); // a bekuldott JSON adatot JS objekte alakitja
             console.log(req.body);
-
-            users.push(req.body)
+            //console.log(users);
+            users.push(req.body) // amit bekuldunk a masik oldalon azyt a body tartalmazza es itt hozza pusholjuk a users filehoz
 
             fs.writeFile(`${fFolder}/users.json`, JSON.stringify(users), error => {  //stringge kell alakitani h tudjunk bele irni
                 if (error) {
